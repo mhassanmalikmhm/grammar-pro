@@ -2,8 +2,19 @@ from flask import Flask, request, jsonify
 from transformers import pipeline
 from flask_cors import CORS
 import torch
+from flask import Flask, render_template
 
 app = Flask(__name__)
+
+@app.route("/")
+def index():
+    # Agar aapka index.html file 'templates' folder mein hai, to yeh chalaayen:
+    # return render_template('index.html')
+    
+    # Agar sirf testing ke liye, to yeh chalaayen:
+    return "<h1>Server is Running!</h1>"
+
+# ... baaki ka code ...
 CORS(app) # CORS enabled
 
 # ===============================================
