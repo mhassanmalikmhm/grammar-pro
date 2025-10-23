@@ -8,11 +8,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    # Agar aapka index.html file 'templates' folder mein hai, to yeh chalaayen:
-    # return render_template('index.html')
-    
-    # Agar sirf testing ke liye, to yeh chalaayen:
-    return "<h1>Server is Running!</h1>"
+    # Ab index.html ko load karen.
+    # Yaad rahe: index.html file ko 'ai_project/templates' folder mein hona chahiye.
+    return render_template('index.html')
 
 # ... baaki ka code ...
 CORS(app) # CORS enabled
