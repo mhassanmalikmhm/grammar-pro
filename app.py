@@ -3,8 +3,10 @@ from transformers import pipeline
 from flask_cors import CORS
 import torch
 import os
-
-print("TEMPLATES DIR CONTENT:", os.listdir("templates"))
+if os.path.exists("templates"):
+    print("TEMPLATES DIR CONTENT:", os.listdir("templates"))
+else:
+    print("No templates directory found.")
 
 
 app = Flask(__name__, template_folder="templates")
