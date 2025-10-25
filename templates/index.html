@@ -1,60 +1,137 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GrammarPro - AI Correction Tool</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "primary": "#1173d4",
+                "background-light": "#f6f7f8",
+                "background-dark": "#101922",
+            },
+            fontFamily: { "display": ["Inter"] },
+            borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+    },
+}
+</script>
+<style>
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+body { min-height: max(884px, 100dvh); }
+</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d141b] dark:text-slate-50">
+<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 justify-between border-b border-[#cfdbe7] dark:border-slate-800">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">task_alt</span>
+<h1 class="text-2xl font-bold tracking-[-0.015em]">GrammarPro</h1>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-base font-medium hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-base font-medium hover:text-primary transition-colors" href="#">About</a>
+<a class="text-base font-medium hover:text-primary transition-colors" href="#">Contact</a>
+</nav>
+<div class="flex items-center justify-end">
+<a class="text-primary text-base font-bold leading-normal tracking-[0.015em] shrink-0" href="#">Sign In</a>
+</div>
+<button class="md:hidden text-[#0d141b] dark:text-slate-50">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col items-center px-4 py-8 md:py-12">
+<div class="w-full max-w-3xl">
+<div class="flex flex-col gap-4">
+<label class="flex flex-col">
+<p class="text-lg font-medium pb-2">Your text here</p>
+<textarea id="sentenceInput" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#0d141b] focus:outline-none focus:ring-2 focus:ring-primary/50 border border-[#cfdbe7] dark:border-slate-700 bg-white dark:bg-slate-800 dark:text-slate-50 min-h-[250px] placeholder:text-[#4c739a] dark:placeholder:text-slate-500 p-4 text-base font-normal leading-normal" placeholder="Start typing or paste your text..."></textarea>
+</label>
+<button onclick="checkGrammar()" class="flex min-w-[84px] max-w-[480px] self-center cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary text-slate-50 text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="truncate">Check Grammar</span>
+</button>
+</div>
+<div id="result" class="mt-8"></div>
+</div>
+</main>
+<footer class="bg-background-light dark:bg-background-dark border-t border-[#cfdbe7] dark:border-slate-800 py-6 px-4">
+<div class="max-w-3xl mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
+<p class="text-sm text-[#4c739a] dark:text-slate-400">© 2024 GrammarPro. All rights reserved.</p>
+<div class="flex items-center gap-4">
+<a class="text-[#4c739a] dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<svg aria-hidden="true" class="h-6 w-6" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path></svg>
+</a>
+<!-- Add other social icons if needed -->
+</div>
+</div>
+</footer>
+</div>
+
 <script>
-    async function checkGrammar() {
-        const sentence = document.getElementById('sentenceInput').value.trim();
-        const resultDiv = document.getElementById('result');
-        // ✅ Change localhost to your Railway URL
-        const API_URL = 'https://web-production-ad8a.up.railway.app/check_grammar'; 
+async function checkGrammar() {
+    const sentence = document.getElementById('sentenceInput').value.trim();
+    const resultDiv = document.getElementById('result');
+    const API_URL = 'https://web-production-ad8a.up.railway.app/check_grammar'; 
 
-        // Initial state
-        resultDiv.innerHTML = '<div class="p-4 text-center text-lg font-bold border rounded-lg bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">Checking grammar... Please wait. (First check may take longer)</div>';
+    resultDiv.innerHTML = '<div class="p-4 text-center text-lg font-bold border rounded-lg bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">Checking grammar... Please wait. (First check may take longer)</div>';
 
-        if (!sentence) {
-            resultDiv.innerHTML = '<div class="p-4 text-center text-lg font-bold border border-red-400 rounded-lg bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">Please enter a sentence first.</div>';
-            return;
-        }
+    if (!sentence) {
+        resultDiv.innerHTML = '<div class="p-4 text-center text-lg font-bold border border-red-400 rounded-lg bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">Please enter a sentence first.</div>';
+        return;
+    }
 
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sentence: sentence })
-            });
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sentence: sentence })
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            if (response.ok && data.status) {
-                const status = data.status;
-                const corrected = data.corrected;
-                const original = data.original;
-                let outputHTML;
+        if (response.ok && data.status) {
+            const status = data.status;
+            const corrected = data.corrected;
+            const original = data.original;
+            let outputHTML;
 
-                if (status === 'CORRECT') {
-                    outputHTML = `
-                        <div class="p-4 border border-green-500 rounded-lg bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-                            <p class="text-2xl font-bold mb-2">Grammar: PERFECT! ✅</p>
-                            <p class="text-base">Sentence: <strong>${original}</strong></p>
-                        </div>
-                    `;
-                } else {
-                    // PROBLEM status: Show both original and corrected sentences
-                    outputHTML = `
-                        <div class="p-4 border border-red-500 rounded-lg bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">
-                            <p class="text-2xl font-bold mb-2">Grammar: PROBLEM Hai. ❌</p>
-                            <p class="text-base mb-1">Incorrect (Original): <strong>${original}</strong></p>
-                            <p class="text-base font-bold text-green-800 dark:text-green-300">Corrected: <u>${corrected}</u></p>
-                        </div>
-                    `;
-                }
-                
-                resultDiv.innerHTML = outputHTML;
-
+            if (status === 'CORRECT') {
+                outputHTML = `
+                    <div class="p-4 border border-green-500 rounded-lg bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                        <p class="text-2xl font-bold mb-2">Grammar: PERFECT! ✅</p>
+                        <p class="text-base">Sentence: <strong>${original}</strong></p>
+                    </div>
+                `;
             } else {
-                resultDiv.innerHTML = `<div class="p-4 text-center text-lg font-bold border border-red-500 rounded-lg bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">Error: ${data.error || 'Server error occurred.'}</div>`;
+                outputHTML = `
+                    <div class="p-4 border border-red-500 rounded-lg bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">
+                        <p class="text-2xl font-bold mb-2">Grammar: PROBLEM Hai. ❌</p>
+                        <p class="text-base mb-1">Incorrect (Original): <strong>${original}</strong></p>
+                        <p class="text-base font-bold text-green-800 dark:text-green-300">Corrected: <u>${corrected}</u></p>
+                    </div>
+                `;
             }
 
-        } catch (error) {
-            console.error('API Call Error:', error);
-            resultDiv.innerHTML = '<div class="p-4 text-center text-lg font-bold border border-red-500 rounded-lg bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">Server se connection mein masla aaya (Check Railway logs).</div>';
+            resultDiv.innerHTML = outputHTML;
+
+        } else {
+            resultDiv.innerHTML = `<div class="p-4 text-center text-lg font-bold border border-red-500 rounded-lg bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">Error: ${data.error || 'Server error occurred.'}</div>`;
         }
+
+    } catch (error) {
+        console.error('API Call Error:', error);
+        resultDiv.innerHTML = '<div class="p-4 text-center text-lg font-bold border border-red-500 rounded-lg bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">Server se connection mein masla aaya (Check Railway logs).</div>';
     }
+}
 </script>
+</body>
+</html>
