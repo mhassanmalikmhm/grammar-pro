@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify, render_template
 from transformers import pipeline
 from flask_cors import CORS
 import torch
+import os
+
+print("TEMPLATES DIR CONTENT:", os.listdir("templates"))
+
 
 app = Flask(__name__, template_folder="templates")
 CORS(app)
