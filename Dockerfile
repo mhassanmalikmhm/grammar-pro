@@ -7,8 +7,8 @@ WORKDIR /app
 # Apne saare project files ko copy karo (ai_project samet)
 COPY . /app
 
-# Dependencies install karo (Note: File ka naam requirement.txt hai)
-RUN pip install --no-cache-dir -r ai_project/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
 
 # Cloud Run ko batao ke kis port par sunna hai
 ENV PORT 8080
