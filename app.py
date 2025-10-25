@@ -3,11 +3,12 @@ from transformers import pipeline
 from flask_cors import CORS
 import torch
 import os
+
+# Templates check
 if os.path.exists("templates"):
     print("TEMPLATES DIR CONTENT:", os.listdir("templates"))
 else:
     print("No templates directory found.")
-
 
 app = Flask(__name__, template_folder="templates")
 CORS(app)
@@ -16,6 +17,7 @@ CORS(app)
 def index():
     return render_template("index.html")
 
+# Load smaller model for CPU to avoid worker timeout
 try:
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
     corrector = pipeline(
@@ -23,6 +25,7 @@ try:
         model="t5-small",
         device=-1 if device == "cpu" else 0
     )
+    print(f"Model loaded on {device}")
 except Exception as e:
     print(f"Error loading model: {e}")
     corrector = None
@@ -39,7 +42,12 @@ def check_grammar():
 
     try:
         input_text = f"grammar: {sentence}"
-        result = corrector(input_text, max_length=128, num_beams=4, early_stopping=True)
+        result = corrector(
+            input_text,
+            max_length=64,
+            num_beams=2,
+            early_stopping=True
+        )
         corrected_sentence = result[0]["generated_text"].strip()
 
         if corrected_sentence.lower().startswith("grammar:"):
@@ -48,11 +56,7 @@ def check_grammar():
             corrected_sentence_for_check = corrected_sentence
 
         is_correct = (sentence.lower().strip(".!?, ") == corrected_sentence_for_check.lower().strip(".!?, "))
-
-        if is_correct:
-            status = "CORRECT"
-        else:
-            status = "INCORRECT"
+        status = "CORRECT" if is_correct else "INCORRECT"
 
         return jsonify({
             "status": status,
@@ -62,3 +66,6 @@ def check_grammar():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
