@@ -3,7 +3,7 @@ from transformers import pipeline
 from flask_cors import CORS
 import torch
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 CORS(app)
 
 @app.route("/")
