@@ -42,4 +42,17 @@ def check_grammar():
             corrected_sentence_for_check = corrected_sentence
 
         is_correct = (sentence.lower().strip(".!?, ") == corrected_sentence_for_check.lower().strip(".!?, "))
-        status
+
+        if is_correct:
+            status = "CORRECT"
+        else:
+            status = "INCORRECT"
+
+        return jsonify({
+            "status": status,
+            "original": sentence,
+            "corrected": corrected_sentence_for_check
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
